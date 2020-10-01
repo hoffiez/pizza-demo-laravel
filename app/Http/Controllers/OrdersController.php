@@ -62,8 +62,6 @@ class OrdersController extends Controller
         return response()->json($order, 201);
     }
 
-
-
     /**
      * @return Guard
      */

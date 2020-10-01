@@ -22,7 +22,7 @@ class OrderService
      */
     public function createOrder(Request $request, User $user = null)
     {
-        $calculatedData = $this->calculateCart($request);
+        $calculatedData = $this->calculateCart($request, $request->input('currency'));
 
         $order = DB::transaction(function() use (
             $request,
@@ -65,11 +65,12 @@ class OrderService
 
     /**
      * @param Request $request
+     * @param $currency
      * @return array
      */
-    public function calculateCart(Request $request)
+    public function calculateCart(Request $request, $currency)
     {
-        $products = $this->calculateProducts($request->input('products'));
+        $products = $this->calculateProducts($request->input('products'), $currency);
         $subTotal = $this->getSubTotal($products);
         $taxPercentage = 19; //percentage
         $taxValue = $subTotal * $taxPercentage / 100;
@@ -126,18 +127,19 @@ class OrderService
 
     /**
      * @param $selectedProducts
+     * @param $currency
      * @return Collection|\Illuminate\Support\Collection
      */
-    private function calculateProducts($selectedProducts)
+    private function calculateProducts($selectedProducts, $currency)
     {
         $selectedProducts = collect($selectedProducts);
         /** @var Collection $products */
         $products = Product::whereIn('id', $selectedProducts->pluck('id'))->get();
         $selectedProducts = $selectedProducts->keyBy('id');
 
-        $results = $products->map(function(Product $item) use ($selectedProducts) {
+        $results = $products->map(function(Product $item) use ($selectedProducts, $currency) {
             $selectedQuantity = $selectedProducts[$item->id]['quantity'];
-            $buyPrice = $this->round($item->price);
+            $buyPrice = $this->round($item->getPrice($currency));
 
             return [
                 'id' => $item->id,
