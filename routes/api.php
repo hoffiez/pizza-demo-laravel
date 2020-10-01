@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SessionsController;
 use Illuminate\Http\Request;
@@ -23,8 +24,12 @@ Route::middleware('auth:api')->group(function() {
     });
 
     Route::post('/signout', [SessionsController::class, 'signout']);
+    Route::get('/orders', [OrdersController::class, 'index']);
 });
 
 Route::get('/products', [ProductsController::class, 'index']);
+
+Route::post('/orders', [OrdersController::class, 'store']);
+
 Route::post('/signin', [SessionsController::class, 'signin']);
 Route::post('/signup', [SessionsController::class, 'signup']);
