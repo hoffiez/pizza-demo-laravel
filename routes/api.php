@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SessionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,6 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/signout', [SessionsController::class, 'signout']);
 });
 
-
+Route::get('/products', [ProductsController::class, 'index']);
 Route::post('/signin', [SessionsController::class, 'signin']);
 Route::post('/signup', [SessionsController::class, 'signup']);
