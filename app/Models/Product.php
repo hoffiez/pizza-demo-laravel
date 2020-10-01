@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\CurrencyConverter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,5 +25,10 @@ class Product extends Model
         if ($this->attributes['product_image_url'] === null) return null;
 
         return config('app.url') .$this->attributes['product_image_url'];
+    }
+
+    public function getPrice($currency = 'USD')
+    {
+        return CurrencyConverter::convert($this->price, $currency);
     }
 }
