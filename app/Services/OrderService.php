@@ -148,7 +148,8 @@ class OrderService
                 'subtotal' => $this->round($buyPrice * $selectedQuantity),
                 'quantity' => $selectedQuantity,
                 'title' =>  $selectedProducts[$item->id]['title'],
-                'img_url' => $selectedProducts[$item->id]['img_url']
+                'img_url' => $selectedProducts[$item->id]['img_url'],
+                'currency' => $currency
             ];
         });
 

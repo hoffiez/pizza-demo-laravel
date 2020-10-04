@@ -24,6 +24,7 @@ class ProductsController extends Controller
 
         $products->transform(function($item) use ($request){
            $item['price'] = CurrencyConverter::convert($item['price'], $request->input('currency'));
+           $item['currency'] = $request->input('currency');
            return $item;
         });
 
