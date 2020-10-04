@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function() {
 Route::get('/products', [ProductsController::class, 'index']);
 
 Route::post('/orders', [OrdersController::class, 'store']);
+Route::post('/calculateCart', [OrdersController::class, 'calculateCart']);
 
 Route::post('/signin', [SessionsController::class, 'signin']);
 Route::post('/signup', [SessionsController::class, 'signup']);
