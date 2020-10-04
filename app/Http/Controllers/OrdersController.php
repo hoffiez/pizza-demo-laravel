@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\Currency;
 use App\Services\OrderService;
 use App\Services\UserService;
 use Illuminate\Contracts\Auth\Guard;
@@ -41,7 +42,7 @@ class OrdersController extends Controller
             'recipient_city' => 'required',
             'recipient_address' => 'required',
             'payment_method' => 'required|in:cash_delivery,card_online',
-            'currency' => 'required|in:USD,EUR'
+            'currency' => ['required', new Currency]
         ]);
 
         /** @var User $user */
@@ -73,7 +74,7 @@ class OrdersController extends Controller
             'products' => 'required',
             'products.*.id' => 'required',
             'products.*.quantity' => 'required|min:1|max:100',
-            'currency' => 'required|in:USD,EUR' //TODO: custom validator
+            'currency' => ['required', new Currency]
         ]);
 
         $response = $orderService->calculateCart($request, $request->input('currency'));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Rules\Currency;
 use App\Utils\CurrencyConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class ProductsController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'currency' => 'in:USD,EUR'
+            'currency' => new Currency
         ]);
 
         $products = Product::all();
