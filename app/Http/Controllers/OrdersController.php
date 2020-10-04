@@ -63,6 +63,25 @@ class OrdersController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param OrderService $orderService
+     * @return JsonResponse
+     */
+    public function calculateCart(Request $request, OrderService $orderService)
+    {
+        $request->validate([
+            'products' => 'required',
+            'products.*.id' => 'required',
+            'products.*.quantity' => 'required|min:1|max:100',
+            'currency' => 'required|in:USD,EUR' //TODO: custom validator
+        ]);
+
+        $response = $orderService->calculateCart($request, $request->input('currency'));
+
+        return response()->json($response, 200);
+    }
+
+    /**
      * @return Guard
      */
     protected function guard() : Guard
