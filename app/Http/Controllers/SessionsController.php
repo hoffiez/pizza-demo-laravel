@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+
 class SessionsController extends Controller
 {
     /** @var UserService */

@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Utils\CurrencyConverter;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function index(Request $request)
     {
         $request->validate([

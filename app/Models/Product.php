@@ -6,6 +6,31 @@ use App\Utils\CurrencyConverter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *  title="Product",
+ *  @OA\Property(
+ *      property="id",
+ *      type="integer"
+ *  ),
+ *  @OA\Property(
+ *      property="title",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="description",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="price",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="quantity",
+ *      type="number"
+ *  ),
+ * )
+ */
 class Product extends Model
 {
     use HasFactory;
