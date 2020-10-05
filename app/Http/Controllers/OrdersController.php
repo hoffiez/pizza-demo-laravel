@@ -47,18 +47,7 @@ class OrdersController extends Controller
 
         /** @var User $user */
         $user = $this->guard()->user();
-
-        if ($user === null && $request->input('signup')) {
-            $user = $userService->signUpUser($request);
-            $token = $userService->loginUser($user, $this->guard());
-            $tokenPayload = $userService->getTokenPayload($token, $this->guard());
-        }
-
         $order = $orderService->createOrder($request, $user);
-
-        if (isset($tokenPayload)) {
-            $order['token'] = $tokenPayload;
-        }
 
         return response()->json($order, 201);
     }
@@ -78,7 +67,6 @@ class OrdersController extends Controller
         ]);
 
         $response = $orderService->calculateCart($request->input('products'), $request->input('currency'));
-
         return response()->json($response, 200);
     }
 

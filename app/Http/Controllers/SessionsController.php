@@ -67,11 +67,27 @@ class SessionsController extends Controller
      */
     public function signup(Request $request)
     {
+        $request->validate(
+            [
+                'email' => "required|email|unique:users,email",
+                'password' => 'required|confirmed|min:8|max:50',
+                'name' => 'required',
+                'pd_agreement' => 'required|in:1'
+            ],
+            [
+                'email.unique' => 'E-mail is already used',
+                'pd_agreement.in' => 'You must agree with the rules'
+            ]
+        );
+
         $user = $this->userService->signUpUser($request);
         $authToken = $this->userService->loginUser($user, $this->guard());
         $tokenPayload = $this->userService->getTokenPayload($authToken, $this->guard());
 
-        return $this->respondWithToken($tokenPayload);
+        return response()->json([
+            'user' => $user,
+            'token' => $tokenPayload
+        ]);
     }
 
     /**

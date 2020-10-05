@@ -21,7 +21,10 @@ class SessionEndpointsTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure(['auth_token', 'token_type', 'expires_in']);
+        $response->assertJsonStructure([
+            'user' => ['id', 'email'],
+            'token' => ['auth_token', 'token_type', 'expires_in']
+        ]);
     }
 
     public function testSignIn()

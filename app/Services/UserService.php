@@ -15,18 +15,6 @@ class UserService
      */
     public function signUpUser(Request $request)
     {
-        $request->validate(
-            [
-                'email' => "required|email|unique:users,email",
-                'password' => 'required|confirmed|min:8|max:50',
-                'name' => 'required',
-                'pd_agreement' => 'required'
-            ],
-            [
-                'email.unique' => 'E-mail is already used'
-            ]
-        );
-
         $inputData = $request->only(['email', 'password', 'name']);
         $inputData['password'] = Hash::make($inputData['password']);
         $user = User::create($inputData);

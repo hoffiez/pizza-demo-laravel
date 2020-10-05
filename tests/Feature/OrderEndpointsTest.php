@@ -34,13 +34,12 @@ class OrdersTest extends TestCase
     /**
      * @dataProvider orderDataProvider
      */
-    public function testCreateSuccessWithoutSignUp($data)
+    public function testCreateSuccess($data)
     {
         $response = $this->postJson('/api/orders',array_merge($data, [
             "products" => $this->cartProducts
         ]));
 
-        $response->dump();
         $response->assertStatus(201);
     }
 
@@ -55,7 +54,6 @@ class OrdersTest extends TestCase
             "products" => $this->cartProducts
         ]));
 
-        $response->dump();
 
         $response->assertStatus(201);
         $response->assertJson([
@@ -63,23 +61,6 @@ class OrdersTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider orderDataProvider
-     */
-    public function testCreateSuccessWithSignUp($data)
-    {
-        $response = $this->postJson('/api/orders', array_merge($data, [
-            "products" => $this->cartProducts,
-            "password" => '12345678',
-            "password_confirmation" => '12345678',
-            "pd_agreement" => true,
-            "signup" => true
-        ]));
-
-        $response->dump();
-        $response->assertStatus(201);
-        $response->assertJsonStructure(['token']);
-    }
 
     public function testGetUserOrders()
     {
