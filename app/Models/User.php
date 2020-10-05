@@ -10,18 +10,17 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @OA\Schema(
- *  ref="Authtoken",
- *  title="Authtoken",
+ *  title="User",
  *  @OA\Property(
- *      property="auth_token",
+ *      property="id",
+ *      type="integer"
+ *  ),
+ *  @OA\Property(
+ *      property="email",
  *      type="string"
  *  ),
  *  @OA\Property(
- *      property="expires_in",
- *      type="string"
- *  ),
- *  @OA\Property(
- *      property="token_type",
+ *      property="name",
  *      type="string"
  *  )
  * )

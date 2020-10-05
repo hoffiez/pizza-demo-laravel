@@ -27,8 +27,6 @@
  *         response=200,
  *         description="successful operation",
  *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
  *                  @OA\Property(
  *                      property="auth_token",
  *                      type="string"
@@ -41,7 +39,6 @@
  *                      property="token_type",
  *                      type="string"
  *                  )
- *             )
  *         ),
  *     ),
  *     @OA\Response(
@@ -107,21 +104,14 @@
  *         response=200,
  *         description="successful operation",
  *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
  *                  @OA\Property(
- *                      property="auth_token",
- *                      type="string"
+ *                      property="token",
+ *                      ref="#/components/schemas/AuthToken"
  *                  ),
  *                  @OA\Property(
- *                      property="expires_in",
- *                      type="string"
- *                  ),
- *                  @OA\Property(
- *                      property="token_type",
- *                      type="string"
+ *                      property="user",
+ *                      ref="#/components/schemas/User"
  *                  )
- *             )
  *         ),
  *     ),
  *     @OA\Response(

@@ -17,17 +17,49 @@ use Illuminate\Database\Eloquent\Model;
  *      type="integer"
  *  ),
  *  @OA\Property(
+ *      property="email",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
  *      property="tax",
- *      type="string"
- *  ),
- *  @OA\Property(
- *      property="price",
- *      type="string"
- *  ),
- *  @OA\Property(
- *      property="quantity",
  *      type="number"
  *  ),
+ *  @OA\Property(
+ *      property="subtotal",
+ *      type="number"
+ *  ),
+ *  @OA\Property(
+ *      property="sum_total",
+ *      type="number"
+ *  ),
+ *  @OA\Property(
+ *      property="payment_method",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="delivery_price",
+ *      type="number"
+ *  ),
+ *  @OA\Property(
+ *      property="name",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="recipient_country",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="recipient_state",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="recipient_city",
+ *      type="string"
+ *  ),
+ *  @OA\Property(
+ *      property="recipient_address",
+ *      type="string"
+ *  )
  * )
  */
 class Order extends Model

@@ -26,9 +26,13 @@ use Illuminate\Database\Eloquent\Model;
  *      type="string"
  *  ),
  *  @OA\Property(
- *      property="quantity",
- *      type="number"
+ *      property="img_url",
+ *      type="string"
  *  ),
+ *  @OA\Property(
+ *      property="currency",
+ *      type="string"
+ *  )
  * )
  */
 class Product extends Model

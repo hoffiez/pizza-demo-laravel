@@ -6,6 +6,15 @@
  *     summary="Create order",
  *     tags={"Orders"},
  *     @OA\Parameter(
+ *         name="products",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="array",
+ *             @OA\Items(ref="#/components/schemas/ProductInCart")
+ *         ),
+ *     ),
+ *     @OA\Parameter(
  *         name="name",
  *         in="query",
  *         required=true,
@@ -66,68 +75,17 @@
  *         in="query",
  *         required=true,
  *         @OA\Schema(
- *             type="string"
- *         ),
- *     ),
- *      @OA\Parameter(
- *         name="password",
- *         in="query",
- *         description="Password, at least 8 characters",
- *         required=false,
- *         @OA\Schema(
- *             type="string"
- *         ),
- *     ),
- *     @OA\Parameter(
- *         name="password_confirmation",
- *         in="query",
- *         description="",
- *         required=false,
- *         @OA\Schema(
- *             type="string"
- *         ),
- *     ),
- *      @OA\Parameter(
- *         name="name",
- *         in="query",
- *         description="User name",
- *         required=false,
- *         @OA\Schema(
- *             type="string"
- *         ),
- *     ),
- *      @OA\Parameter(
- *         name="pd_agreement",
- *         in="query",
- *         description="User agreement with the rules",
- *         required=false,
- *         @OA\Schema(
- *             type="string"
+ *             type="string",
+ *             enum={"USD", "EUR"}
  *         ),
  *     ),
  *     @OA\Response(
  *         response=200,
  *         description="successful operation",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                  @OA\Property(
- *                      property="auth_token",
- *                      type="string"
- *                  ),
- *                  @OA\Property(
- *                      property="expires_in",
- *                      type="string"
- *                  ),
- *                  @OA\Property(
- *                      property="token_type",
- *                      type="string"
- *                  )
- *             )
- *         ),
+ *         @OA\JsonContent(ref="#/components/schemas/Order")
  *     ),
  *     @OA\Response(
- *         response=402,
+ *         response=422,
  *         description="invalid input",
  *     )
  * )
@@ -152,4 +110,48 @@
  *         description="user unauthorized"
  *     )
  * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/calculateCart",
+ *     summary="Calculate cart",
+ *     tags={"Orders"},
+ *     @OA\Parameter(
+ *         name="products",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="array",
+ *             @OA\Items(ref="#/components/schemas/ProductInCart")
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="successful operation",
+ *         @OA\JsonContent(
+ *             @OA\Property(
+ *                  property="products",
+ *                  ref="#/components/schemas/CartProductCalculated"
+ *             ),
+ *              @OA\Property(
+ *                  property="delivery_price",
+ *                  type="number"
+ *              ),
+ *              @OA\Property(
+ *                  property="subtotal",
+ *                  type="number",
+ *              ),
+ *              @OA\Property(
+ *                  property="tax",
+ *                  type="number"
+ *              ),
+ *              @OA\Property(
+ *                  property="sum_total",
+ *                  type="number",
+ *              )
+ *         ),
+ *     ),
+ * )
+ *
  */

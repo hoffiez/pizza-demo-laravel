@@ -55,6 +55,17 @@
                 "summary": "Create order",
                 "parameters": [
                     {
+                        "name": "products",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ProductInCart"
+                            }
+                        }
+                    },
+                    {
                         "name": "name",
                         "in": "query",
                         "required": true,
@@ -115,43 +126,11 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "description": "Password, at least 8 characters",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password_confirmation",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "User name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "pd_agreement",
-                        "in": "query",
-                        "description": "User agreement with the rules",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "USD",
+                                "EUR"
+                            ]
                         }
                     }
                 ],
@@ -161,27 +140,63 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "auth_token": {
-                                                "type": "string"
-                                            },
-                                            "expires_in": {
-                                                "type": "string"
-                                            },
-                                            "token_type": {
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
+                                    "$ref": "#/components/schemas/Order"
                                 }
                             }
                         }
                     },
-                    "402": {
+                    "422": {
                         "description": "invalid input"
+                    }
+                }
+            }
+        },
+        "/calculateCart": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Calculate cart",
+                "parameters": [
+                    {
+                        "name": "products",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ProductInCart"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "products": {
+                                            "$ref": "#/components/schemas/CartProductCalculated"
+                                        },
+                                        "delivery_price": {
+                                            "type": "number"
+                                        },
+                                        "subtotal": {
+                                            "type": "number"
+                                        },
+                                        "tax": {
+                                            "type": "number"
+                                        },
+                                        "sum_total": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -253,21 +268,18 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "auth_token": {
-                                                "type": "string"
-                                            },
-                                            "expires_in": {
-                                                "type": "string"
-                                            },
-                                            "token_type": {
-                                                "type": "string"
-                                            }
+                                    "properties": {
+                                        "auth_token": {
+                                            "type": "string"
                                         },
-                                        "type": "object"
-                                    }
+                                        "expires_in": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -337,21 +349,15 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "auth_token": {
-                                                "type": "string"
-                                            },
-                                            "expires_in": {
-                                                "type": "string"
-                                            },
-                                            "token_type": {
-                                                "type": "string"
-                                            }
+                                    "properties": {
+                                        "token": {
+                                            "$ref": "#/components/schemas/AuthToken"
                                         },
-                                        "type": "object"
-                                    }
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -374,14 +380,38 @@
                     "user_id": {
                         "type": "integer"
                     },
+                    "email": {
+                        "type": "string"
+                    },
                     "tax": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "string"
-                    },
-                    "quantity": {
                         "type": "number"
+                    },
+                    "subtotal": {
+                        "type": "number"
+                    },
+                    "sum_total": {
+                        "type": "number"
+                    },
+                    "payment_method": {
+                        "type": "string"
+                    },
+                    "delivery_price": {
+                        "type": "number"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "recipient_country": {
+                        "type": "string"
+                    },
+                    "recipient_state": {
+                        "type": "string"
+                    },
+                    "recipient_city": {
+                        "type": "string"
+                    },
+                    "recipient_address": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -401,14 +431,77 @@
                     "price": {
                         "type": "string"
                     },
-                    "quantity": {
-                        "type": "number"
+                    "img_url": {
+                        "type": "string"
+                    },
+                    "currency": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
             },
             "User": {
-                "$ref": "Authtoken"
+                "title": "User",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthToken": {
+                "title": "AuthToken",
+                "properties": {
+                    "auth_token": {
+                        "type": "string"
+                    },
+                    "expires_in": {
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CartProductCalculated": {
+                "title": "Calculated product",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    },
+                    "currency": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "subtotal": {
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
+            "ProductInCart": {
+                "title": "Product in cart",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
