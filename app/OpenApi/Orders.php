@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @OA\Get(
+ * @OA\Post(
  *     path="/orders",
  *     summary="Create order",
  *     tags={"Orders"},
@@ -148,7 +148,7 @@
  *         ),
  *     ),
  *     @OA\Response(
- *         response=403,
+ *         response=401,
  *         description="user unauthorized"
  *     )
  * )

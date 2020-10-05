@@ -12,6 +12,6 @@ class CurrencyConverter
             $rate = 1;
         }
 
-        return round($amount * $rate, 2);
+        return $amount * $rate;
     }
 }

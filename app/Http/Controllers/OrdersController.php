@@ -34,7 +34,7 @@ class OrdersController extends Controller
         $request->validate([
             'products' => 'required', //minimum one product is required
             'products.*.id' => 'required',
-            'products.*.quantity' => 'required|min:1|max:100', //max value depends on business logic
+            'products.*.quantity' => 'required|integer|min:1|max:100', //max value depends on business logic
             'name' => 'required',
             'email' => 'required',
             'recipient_country' => 'required',
@@ -73,11 +73,11 @@ class OrdersController extends Controller
         $request->validate([
             'products' => 'required',
             'products.*.id' => 'required',
-            'products.*.quantity' => 'required|min:1|max:100',
+            'products.*.quantity' => 'required|integer|min:1|max:100',
             'currency' => ['required', new Currency]
         ]);
 
-        $response = $orderService->calculateCart($request, $request->input('currency'));
+        $response = $orderService->calculateCart($request->input('products'), $request->input('currency'));
 
         return response()->json($response, 200);
     }

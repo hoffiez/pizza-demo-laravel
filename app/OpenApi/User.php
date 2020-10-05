@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @OA\Get(
+ * @OA\Post(
  *     path="/signin",
  *     summary="Sign In User",
  *     tags={"User"},
@@ -45,7 +45,7 @@
  *         ),
  *     ),
  *     @OA\Response(
- *         response=402,
+ *         response=422,
  *         description="invalid input",
  *     )
  * )
@@ -54,7 +54,7 @@
 
 
 /**
- * @OA\Get(
+ * @OA\Post(
  *     path="/signup",
  *     summary="Sign Up User",
  *     tags={"User"},
@@ -125,7 +125,7 @@
  *         ),
  *     ),
  *     @OA\Response(
- *         response=402,
+ *         response=422,
  *         description="invalid input",
  *     )
  * )

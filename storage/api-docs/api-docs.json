@@ -28,6 +28,30 @@
                 "tags": [
                     "Orders"
                 ],
+                "summary": "Get list of user orders",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Order"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "user unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
                 "summary": "Create order",
                 "parameters": [
                     {
@@ -198,7 +222,7 @@
             }
         },
         "/signin": {
-            "get": {
+            "post": {
                 "tags": [
                     "User"
                 ],
@@ -248,14 +272,14 @@
                             }
                         }
                     },
-                    "402": {
+                    "422": {
                         "description": "invalid input"
                     }
                 }
             }
         },
         "/signup": {
-            "get": {
+            "post": {
                 "tags": [
                     "User"
                 ],
@@ -332,7 +356,7 @@
                             }
                         }
                     },
-                    "402": {
+                    "422": {
                         "description": "invalid input"
                     }
                 }
@@ -341,6 +365,27 @@
     },
     "components": {
         "schemas": {
+            "Order": {
+                "title": "Order",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "tax": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
             "Product": {
                 "title": "Product",
                 "properties": {

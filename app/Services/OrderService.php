@@ -5,12 +5,11 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use http\Exception\UnexpectedValueException;
+use App\Utils\CurrencyConverter;;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -22,7 +21,7 @@ class OrderService
      */
     public function createOrder(Request $request, User $user = null)
     {
-        $calculatedData = $this->calculateCart($request, $request->input('currency'));
+        $calculatedData = $this->calculateCart($request->input('products'), $request->input('currency'));
 
         $order = DB::transaction(function() use (
             $request,
@@ -64,64 +63,38 @@ class OrderService
     }
 
     /**
-     * @param Request $request
+     * @param $selectedProducts
      * @param $currency
+     * @param int $taxPercentage
+     * @param int $deliveryPrice
      * @return array
      */
-    public function calculateCart(Request $request, $currency)
+    public function calculateCart($selectedProducts, $currency, $taxPercentage = 19, $deliveryPrice = 1)
     {
-        $products = $this->calculateProducts($request->input('products'), $currency);
-        $subTotal = $this->getSubTotal($products);
-        $taxPercentage = 19; //percentage
-        $taxValue = $subTotal * $taxPercentage / 100;
-        $deliveryPrice = 1; //in dollars
-        $sumTotal = $deliveryPrice + $subTotal + $taxValue;
+        $products = $this->calculateProducts($selectedProducts, $currency);
+        $subTotal = $this->round($this->getSubTotal($products));
+        $taxValue = $this->round($subTotal * $taxPercentage / 100);
+        $deliveryPrice = $this->round(CurrencyConverter::convert($deliveryPrice, $currency));
+        $sumTotal = $this->round($deliveryPrice + $subTotal + $taxValue);
 
         return [
             'products' => $products,
-            'subtotal' => $this->round($subTotal),
-            'tax' => $this->round($taxValue),
+            'subtotal' => $subTotal,
+            'tax' => $taxValue,
             'delivery_price' => $deliveryPrice,
-            'sum_total' => $this->round($sumTotal)
+            'sum_total' => $sumTotal
         ];
     }
 
     /**
-     * @param $selectedProducts
-     */
-    public function validateQuantity($selectedProducts)
-    {
-        $products = Product::whereIn('id', Arr::pluck($selectedProducts, 'id'))->get()->keyBy('id');
-
-        $productsToAdd = [];
-        $subTotal = 0;
-
-        foreach ($selectedProducts as $selectedProduct) {
-            $product = $products[$selectedProduct['id']];
-            $quantityAvailable = $product->quantity;
-
-            if ($selectedProduct['quantity'] > $quantityAvailable) {
-                throw new UnexpectedValueException("The requested quantity is not available"); //TODO:
-            }
-
-            $productsToAdd[$product['id']] = [
-                'buy_price' => $product->price,
-                'quantity' => $selectedProduct['quantity']
-            ];
-
-            $subTotal += $product->price * $selectedProduct['quantity'];
-        }
-    }
-
-    /**
      * Prepares products array for inserting into DB
-     * @param Collection $products
-     * @return Collection
+     * @param \Illuminate\Support\Collection $products
+     * @return \Illuminate\Support\Collection
      */
-    private function prepareProductsForSave(Collection $products)
+    private function prepareProductsForSave(\Illuminate\Support\Collection $products)
     {
         return $products->keyBy('id')->map(function($item) {
-            return $item->only(['buy_price', 'subtotal', 'quantity']);
+            return Arr::only($item, ['buy_price', 'subtotal', 'quantity']);
         });
     }
 
@@ -147,8 +120,8 @@ class OrderService
                 'price' => $buyPrice,
                 'subtotal' => $this->round($buyPrice * $selectedQuantity),
                 'quantity' => $selectedQuantity,
-                'title' =>  $selectedProducts[$item->id]['title'],
-                'img_url' => $selectedProducts[$item->id]['img_url'],
+                'title' =>  $item->title,
+                'img_url' => $item->img_url,
                 'currency' => $currency
             ];
         });
@@ -165,6 +138,10 @@ class OrderService
         return collect($products)->sum('subtotal');
     }
 
+    /**
+     * @param $sum
+     * @return float
+     */
     private function round($sum)
     {
         //The rounding method should be chosen according to the business logic
