@@ -9,6 +9,7 @@ use App\Utils\CurrencyConverter;;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
@@ -88,10 +89,10 @@ class OrderService
 
     /**
      * Prepares products array for inserting into DB
-     * @param \Illuminate\Support\Collection $products
-     * @return \Illuminate\Support\Collection
+     * @param SupportCollection $products
+     * @return SupportCollection
      */
-    private function prepareProductsForSave(\Illuminate\Support\Collection $products)
+    private function prepareProductsForSave(SupportCollection $products)
     {
         return $products->keyBy('id')->map(function($item) {
             return Arr::only($item, ['buy_price', 'subtotal', 'quantity']);
@@ -101,7 +102,7 @@ class OrderService
     /**
      * @param $selectedProducts
      * @param $currency
-     * @return Collection|\Illuminate\Support\Collection
+     * @return Collection|SupportCollection
      */
     private function calculateProducts($selectedProducts, $currency)
     {
@@ -112,7 +113,7 @@ class OrderService
 
         $results = $products->map(function(Product $item) use ($selectedProducts, $currency) {
             $selectedQuantity = $selectedProducts[$item->id]['quantity'];
-            $buyPrice = $this->round($item->getPrice($currency));
+            $buyPrice = $this->round($item->getConvertedPrice($currency));
 
             return [
                 'id' => $item->id,

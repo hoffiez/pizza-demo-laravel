@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @OA\Schema(
+ * @OA\Schema (
  *  title="Order",
  *  @OA\Property(
  *      property="id",
@@ -61,6 +61,7 @@ use Illuminate\Database\Eloquent\Model;
  *      type="string"
  *  )
  * )
+ * @mixin IdeHelperOrder
  */
 class Order extends Model
 {

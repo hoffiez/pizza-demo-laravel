@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @OA\Schema(
+ * @OA\Schema (
  *  title="Product",
  *  @OA\Property(
  *      property="id",
@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  *      type="string"
  *  )
  * )
+ * @mixin IdeHelperProduct
  */
 class Product extends Model
 {
@@ -56,7 +57,7 @@ class Product extends Model
         return config('app.url') .$this->attributes['product_image_url'];
     }
 
-    public function getPrice($currency = 'USD')
+    public function getConvertedPrice($currency = 'USD')
     {
         return CurrencyConverter::convert($this->price, $currency);
     }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Rules\Currency;
+use App\Rules\ProductQuantity;
 use App\Services\OrderService;
-use App\Services\UserService;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,15 +26,14 @@ class OrdersController extends Controller
     /**
      * @param Request $request
      * @param OrderService $orderService
-     * @param UserService $userService
      * @return JsonResponse
      */
-    public function store(Request $request, OrderService $orderService, UserService $userService)
+    public function store(Request $request, OrderService $orderService)
     {
         $request->validate([
             'products' => 'required', //minimum one product is required
             'products.*.id' => 'required',
-            'products.*.quantity' => 'required|integer|min:1|max:100', //max value depends on business logic
+            'products.*.quantity' => ['required', new ProductQuantity],
             'name' => 'required',
             'email' => 'required',
             'recipient_country' => 'required',
@@ -62,7 +61,7 @@ class OrdersController extends Controller
         $request->validate([
             'products' => 'required',
             'products.*.id' => 'required',
-            'products.*.quantity' => 'required|integer|min:1|max:100',
+            'products.*.quantity' => ['required', new ProductQuantity],
             'currency' => ['required', new Currency]
         ]);
 
