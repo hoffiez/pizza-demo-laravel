@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
- * @OA\Schema(
+ * @OA\Schema (
  *  title="User",
  *  @OA\Property(
  *      property="id",
@@ -24,6 +24,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *      type="string"
  *  )
  * )
+ * @mixin IdeHelperUser
  */
 class User extends Authenticatable implements JWTSubject
 {
